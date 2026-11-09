@@ -59,8 +59,8 @@ export function ListaParadas({ paradas }: { paradas: Parada[] }) {
                   <span className={estilos.nome}>{p.cliente.nome}</span>
                   <span className={estilos.endereco}>{p.cliente.endereco}</span>
                   <span className={estilos.pedido}>{p.resumo}</span>
-                  {p.anotacoes.map((a) => (
-                    <span key={a} className={estilos.anotacao}>
+                  {p.anotacoes.map((a, i) => (
+                    <span key={i} className={estilos.anotacao}>
                       {a}
                     </span>
                   ))}

@@ -18,6 +18,7 @@
   color: var(--cor-texto-suave);
   text-decoration: none;
   border-top: 4px solid transparent;
+  touch-action: manipulation;
 }
 
 .ativo {

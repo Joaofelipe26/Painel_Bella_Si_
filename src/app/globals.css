@@ -8,6 +8,9 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  color-scheme: light;
+  /* O menu fixo não cobre o campo em foco. */
+  scroll-padding-bottom: calc(var(--altura-menu) + var(--espaco-6));
 }
 
 body {
@@ -38,6 +41,11 @@ select,
 textarea {
   font: inherit;
   color: inherit;
+}
+
+select {
+  color: var(--cor-texto);
+  background-color: var(--cor-branco);
 }
 
 :focus-visible {

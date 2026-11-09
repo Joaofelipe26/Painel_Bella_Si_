@@ -8,6 +8,7 @@
   padding: 0;
   background: var(--cor-creme);
   color: var(--cor-texto);
+  overscroll-behavior: contain;
 }
 
 .folha::backdrop {

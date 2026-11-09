@@ -11,7 +11,8 @@
     "db:gerar": "drizzle-kit generate",
     "db:migrar": "tsx src/db/migrar.ts",
     "db:semear": "tsx src/db/semear.ts",
-    "vercel-build": "tsx src/db/migrar.ts && next build"
+    "vercel-build": "tsx src/db/migrar.ts && next build",
+    "test:e2e": "playwright test"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.16",
@@ -24,6 +25,7 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.0",
     "@types/node": "^24.19.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",

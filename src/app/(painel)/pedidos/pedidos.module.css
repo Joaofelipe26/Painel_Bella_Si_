@@ -52,7 +52,7 @@
 }
 
 .conteudo {
-  padding: var(--espaco-4) var(--espaco-3);
+  padding: var(--espaco-4) var(--espaco-2);
   display: flex;
   flex-direction: column;
   gap: var(--espaco-2);
@@ -61,8 +61,8 @@
 .linhaTitulos,
 .linha {
   display: grid;
-  grid-template-columns: 88px repeat(5, minmax(0, 1fr));
-  gap: var(--espaco-1);
+  grid-template-columns: 80px repeat(5, minmax(0, 1fr));
+  gap: 3px;
   align-items: center;
 }
 
@@ -90,7 +90,7 @@
 .linha {
   background: var(--cor-branco);
   border-radius: var(--raio-m);
-  padding: var(--espaco-2);
+  padding: var(--espaco-2) 6px;
 }
 
 .colNome {
@@ -114,13 +114,15 @@
 .celula {
   min-height: var(--altura-celula);
   min-width: 0;
-  padding: 2px;
+  padding: 2px 0;
   border-radius: var(--raio-p);
   border: none;
   font-size: var(--texto-16);
   font-weight: var(--peso-forte);
   line-height: 1.1;
-  overflow-wrap: anywhere;
+  overflow-wrap: normal;
+  word-break: keep-all;
+  letter-spacing: -0.01em;
   cursor: pointer;
   touch-action: manipulation;
 }

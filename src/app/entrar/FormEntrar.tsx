@@ -22,6 +22,7 @@ export function FormEntrar() {
         inputMode="numeric"
         autoComplete="current-password"
         pattern="[0-9]*"
+        spellCheck={false}
         required
         autoFocus
         className={estilos.campo}
