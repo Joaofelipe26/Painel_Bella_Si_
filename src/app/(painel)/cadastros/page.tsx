@@ -40,6 +40,9 @@ export default async function PaginaCadastros({ searchParams }: PageProps<'/cada
         ) : (
           <FormCardapio key={segunda} segunda={segunda} dias={await cardapioDaSemana(db, segunda)} />
         )}
+        <Link href="/ajuda" className={estilos.ajuda}>
+          Como usar o painel
+        </Link>
         <form action={sairAcao} className={estilos.sair}>
           <button type="submit" className={estilos.botaoSair}>
             Sair do painel

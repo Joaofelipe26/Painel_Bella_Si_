@@ -7,6 +7,7 @@ const TELAS = [
   { nome: 'entregas', url: '/entregas?leva=1', espera: 'Entregas de hoje' },
   { nome: 'clientes', url: '/cadastros', espera: '+ Novo cliente' },
   { nome: 'cardapio', url: '/cadastros?aba=cardapio', espera: 'Salvar semana' },
+  { nome: 'ajuda', url: '/ajuda', espera: 'Como usar o painel' },
 ];
 
 test('tela de entrada', async ({ page }, info) => {

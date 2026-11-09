@@ -246,3 +246,16 @@
   margin: var(--espaco-1) 0 0;
   padding-left: var(--espaco-5);
 }
+
+.ajuda {
+  min-height: var(--altura-botao);
+  margin-top: var(--espaco-4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--raio-m);
+  background: var(--cor-verde-fundo);
+  color: var(--cor-verde-escuro);
+  font-weight: var(--peso-forte);
+  text-decoration: none;
+}
