@@ -62,3 +62,17 @@ test.describe('falhas de rede e de sessão', () => {
   });
 });
 
+
+test.describe('atalho da tela de início', () => {
+  test('manifest e ícones abrem sem login', async ({ request }, info) => {
+    test.skip(info.project.name !== 'celular-390', 'Roda só uma vez');
+    const manifest = await request.get('/manifest.webmanifest', { maxRedirects: 0 });
+    expect(manifest.status()).toBe(200);
+    expect((await manifest.json()).short_name).toBe('Bella Si');
+    for (const caminho of ['/icone-192.png', '/icone-512.png', '/icone-maskable-512.png', '/apple-icon.png']) {
+      const r = await request.get(caminho, { maxRedirects: 0 });
+      expect(r.status(), caminho).toBe(200);
+      expect(r.headers()['content-type'], caminho).toContain('image/png');
+    }
+  });
+});

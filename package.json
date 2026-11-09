@@ -12,7 +12,8 @@
     "db:migrar": "tsx src/db/migrar.ts",
     "db:semear": "tsx src/db/semear.ts",
     "vercel-build": "tsx src/db/migrar.ts && next build",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "icones": "node scripts/gerar-icones.mjs"
   },
   "dependencies": {
     "@electric-sql/pglite": "^0.5.16",
@@ -32,6 +33,7 @@
     "drizzle-kit": "^0.31.11",
     "eslint": "^9",
     "eslint-config-next": "16.4.5",
+    "sharp": "^0.35.5",
     "tsx": "^4.23.15",
     "typescript": "^5",
     "vitest": "^5.1.0"
