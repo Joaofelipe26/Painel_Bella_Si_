@@ -53,6 +53,16 @@ describe('validarCliente', () => {
     expect(r.ok && r.valor.marmitaoPadrao).toBe(false);
   });
 
+  it('aceita o formulário real: campos opcionais e caixa desmarcada não vêm', () => {
+    // Um checkbox desmarcado não entra no FormData; a chave fica ausente.
+    const { marmitaoPadrao: _m, telefone: _t, bairro: _b, anotacaoFixa: _a, ...semOpcionais } = valido;
+    const r = validarCliente(semOpcionais);
+    expect(r).toEqual({
+      ok: true,
+      valor: expect.objectContaining({ marmitaoPadrao: false, telefone: null, bairro: null, anotacaoFixa: null }),
+    });
+  });
+
   it('aceita id para editar', () => {
     const r = validarCliente({ ...valido, id: '7' });
     expect(r.ok && r.valor.id).toBe(7);

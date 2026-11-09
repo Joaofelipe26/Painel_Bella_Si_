@@ -17,6 +17,26 @@ test.describe('fluxo principal', () => {
     await expect(page).toHaveURL(/\/entrar$/);
   });
 
+  test('cadastrar cliente pelo formulário, só com os campos obrigatórios', async ({ page }) => {
+    await entrarComSucesso(page);
+    await page.goto('/cadastros');
+    await page.getByRole('button', { name: '+ Novo cliente' }).click();
+    const folha = page.getByRole('dialog');
+    await folha.getByLabel('Nome').fill('Cliente Teste E2E');
+    await folha.getByLabel('Endereço').fill('R. Teste, 1');
+    await folha.getByRole('button', { name: 'Salvar cliente' }).click();
+    await expect(page.getByText('Cliente cadastrado.')).toBeVisible();
+    await expect(page.getByRole('button', { name: /^Cliente Teste E2E/ })).toBeVisible();
+  });
+
+  test('salvar o cardápio da semana', async ({ page }) => {
+    await entrarComSucesso(page);
+    await page.goto('/cadastros?aba=cardapio');
+    await page.getByLabel('Prato do dia').first().fill('Prato E2E');
+    await page.getByRole('button', { name: 'Salvar semana' }).click();
+    await expect(page.getByText('Cardápio salvo.')).toBeVisible();
+  });
+
   test('marcar pedido, ver em Hoje e marcar a entrega', async ({ page }) => {
     test.setTimeout(90_000);
     const hoje = hojeNaGrade();

@@ -16,7 +16,7 @@ const esquemaPedido = z.object({
     .min(QUANTIDADE_MIN, 'A quantidade vai de 1 a 3.')
     .max(QUANTIDADE_MAX, 'A quantidade vai de 1 a 3.'),
   marmitao: z.boolean(),
-  anotacao: z.unknown().transform(textoOuNulo),
+  anotacao: z.unknown().optional().transform(textoOuNulo),
 });
 
 export function validarPedido(dados: unknown): Resultado<Pedido> {

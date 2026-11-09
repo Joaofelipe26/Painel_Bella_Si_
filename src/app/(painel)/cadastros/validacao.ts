@@ -4,7 +4,7 @@ import { PLANOS } from '@/dominio/tipos';
 import type { CardapioDia, Cliente, Leva } from '@/dominio/tipos';
 import { textoOuNulo, validar, type Resultado } from '@/lib/resultado';
 
-const textoOpcional = z.unknown().transform(textoOuNulo);
+const textoOpcional = z.unknown().optional().transform(textoOuNulo);
 
 const esquemaCliente = z.object({
   id: z.coerce.number().int().positive().optional().catch(undefined),
@@ -20,7 +20,7 @@ const esquemaCliente = z.object({
     .transform((n) => n as Leva),
   ordemRota: z.coerce.number({ error: 'Digite a ordem na rota.' }).int().min(0, 'A ordem na rota deve ser 0 ou mais.'),
   plano: z.enum(PLANOS as [string, ...string[]], { error: 'Escolha o plano.' }).transform((p) => p as Cliente['plano']),
-  marmitaoPadrao: z.unknown().transform((v) => v === 'on' || v === true || v === 'true'),
+  marmitaoPadrao: z.unknown().optional().transform((v) => v === 'on' || v === true || v === 'true'),
   anotacaoFixa: textoOpcional,
 });
 
