@@ -4,8 +4,9 @@ import { revalidatePath } from 'next/cache';
 import { ERRO_SESSAO, sessaoAtiva } from '@/auth/exigirSessao';
 import { getDb } from '@/db/cliente';
 import { salvarCardapio } from '@/db/consultas/cardapio';
-import { definirAtivo, salvarCliente } from '@/db/consultas/clientes';
+import { definirAtivo, importarClientes, salvarCliente } from '@/db/consultas/clientes';
 import type { RespostaAcao } from '@/lib/resultado';
+import { lerPlanilhaClientes } from './planilha';
 import { validarCardapio, validarCliente } from './validacao';
 
 export async function salvarClienteAcao(_anterior: RespostaAcao | null, formData: FormData): Promise<RespostaAcao> {
@@ -51,4 +52,23 @@ export async function salvarCardapioAcao(_anterior: RespostaAcao | null, formDat
   }
   revalidatePath('/', 'layout');
   return { ok: true };
+}
+
+export type RespostaImportacao =
+  | { ok: true; criados: number; ignorados: string[] }
+  | { ok: false; erro: string };
+
+/** Importa os clientes válidos de uma planilha CSV. As linhas com erro ficam de fora. */
+export async function importarClientesAcao(texto: string): Promise<RespostaImportacao> {
+  if (!(await sessaoAtiva())) return ERRO_SESSAO;
+  if (typeof texto !== 'string' || texto.length > 500_000) return { ok: false, erro: 'Arquivo grande demais.' };
+  const { clientes } = lerPlanilhaClientes(texto);
+  if (clientes.length === 0) return { ok: false, erro: 'Nenhum cliente válido na planilha.' };
+  try {
+    const r = await importarClientes(await getDb(), clientes);
+    revalidatePath('/', 'layout');
+    return { ok: true, ...r };
+  } catch {
+    return { ok: false, erro: 'Não foi possível importar. Tente de novo.' };
+  }
 }

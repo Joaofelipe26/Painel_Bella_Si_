@@ -232,3 +232,17 @@
   text-decoration: underline;
   cursor: pointer;
 }
+
+.passos {
+  margin: 0;
+  padding-left: var(--espaco-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+  font-size: var(--texto-16);
+}
+
+.listaErros {
+  margin: var(--espaco-1) 0 0;
+  padding-left: var(--espaco-5);
+}

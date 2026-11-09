@@ -9,6 +9,7 @@ import { Botao } from '@/ui/Botao';
 import { Folha } from '@/ui/Folha';
 import { definirAtivoAcao, salvarClienteAcao } from './acoes';
 import estilos from './cadastros.module.css';
+import { ImportarPlanilha } from './ImportarPlanilha';
 
 function normalizar(t: string): string {
   return t.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
@@ -39,6 +40,7 @@ export function ListaClientes({ clientes }: { clientes: Cliente[] }) {
         <Botao largo onClick={() => setEditando('novo')}>
           + Novo cliente
         </Botao>
+        <ImportarPlanilha aoTerminar={setMensagem} />
       </div>
 
       {mensagem && <Aviso tipo={mensagem.tipo}>{mensagem.texto}</Aviso>}

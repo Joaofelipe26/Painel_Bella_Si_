@@ -29,6 +29,18 @@ test.describe('fluxo principal', () => {
     await expect(page.getByRole('button', { name: /^Cliente Teste E2E/ })).toBeVisible();
   });
 
+  test('importar clientes pela planilha modelo', async ({ page }) => {
+    await entrarComSucesso(page);
+    await page.goto('/cadastros');
+    await page.getByRole('button', { name: 'Importar planilha' }).click();
+    const folha = page.getByRole('dialog');
+    await folha.locator('input[type=file]').setInputFiles('public/modelo-clientes.csv');
+    await expect(folha.getByText(/2 clientes prontos: Maria Exemplo, João Exemplo/)).toBeVisible();
+    await folha.getByRole('button', { name: 'Importar 2 clientes' }).click();
+    await expect(page.getByText('2 clientes importados.')).toBeVisible();
+    await expect(page.getByRole('button', { name: /^João Exemplo/ })).toBeVisible();
+  });
+
   test('salvar o cardápio da semana', async ({ page }) => {
     await entrarComSucesso(page);
     await page.goto('/cadastros?aba=cardapio');

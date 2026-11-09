@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import type { Db } from '../cliente';
 import { criarDbDeTeste } from '../teste';
 import { semear } from '../semear';
-import { definirAtivo, listarClientes, salvarCliente } from './clientes';
+import { definirAtivo, importarClientes, listarClientes, salvarCliente } from './clientes';
 import { cardapioDaSemana, cardapioDoDia, salvarCardapio } from './cardapio';
 import {
   apagarPedido,
@@ -62,6 +62,20 @@ describe('clientes', () => {
     expect(await listarClientes(db)).toEqual([]);
     expect(await listarClientes(db, { incluirInativos: true })).toHaveLength(1);
     expect(await pedidosDoDia(db, '2026-11-11')).toHaveLength(1);
+  });
+});
+
+describe('importarClientes', () => {
+  it('cria os novos e pula quem já existe pelo nome, sem ligar para acento e maiúscula', async () => {
+    await salvarCliente(db, { ...novoCliente, nome: 'José' });
+    const { ativo: _a, ...base } = novoCliente;
+    const r = await importarClientes(db, [
+      { ...base, nome: 'jose' },
+      { ...base, nome: 'Rita' },
+      { ...base, nome: 'Rita' },
+    ]);
+    expect(r).toEqual({ criados: 1, ignorados: ['jose', 'Rita'] });
+    expect((await listarClientes(db)).map((c) => c.nome)).toEqual(['José', 'Rita']);
   });
 });
 

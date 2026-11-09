@@ -22,6 +22,31 @@ export async function salvarCliente(db: Db, dados: Omit<Cliente, 'id'> & { id?: 
   return linha;
 }
 
+function chaveDoNome(nome: string): string {
+  return nome.normalize('NFD').replace(/[̀-ͯ]/g, '').trim().toLowerCase();
+}
+
+/** Cria clientes de uma planilha. Pula nomes que já existem (ativos ou não) ou que se repetem na lista. */
+export async function importarClientes(
+  db: Db,
+  lista: Omit<Cliente, 'id' | 'ativo'>[],
+): Promise<{ criados: number; ignorados: string[] }> {
+  const existentes = new Set((await listarClientes(db, { incluirInativos: true })).map((c) => chaveDoNome(c.nome)));
+  const novos: Omit<Cliente, 'id'>[] = [];
+  const ignorados: string[] = [];
+  for (const c of lista) {
+    const chave = chaveDoNome(c.nome);
+    if (existentes.has(chave)) {
+      ignorados.push(c.nome);
+      continue;
+    }
+    existentes.add(chave);
+    novos.push({ ...c, ativo: true });
+  }
+  if (novos.length > 0) await db.insert(clientes).values(novos);
+  return { criados: novos.length, ignorados };
+}
+
 /** Ao desativar, apaga os pedidos depois de `hoje`. Os de hoje e os passados ficam (entrega e histórico). */
 export async function definirAtivo(db: Db, id: number, ativo: boolean, hoje: string = hojeSP(new Date())): Promise<void> {
   await db.update(clientes).set({ ativo }).where(eq(clientes.id, id));
