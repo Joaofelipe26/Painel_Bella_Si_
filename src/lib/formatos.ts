@@ -1,4 +1,18 @@
 import { diaDaSemana } from '@/dominio/datas';
+import { SIGLA, type Pedido } from '@/dominio/tipos';
+
+export type TipoCelula = 'vazio' | 'normal' | 'veg' | 'marmitao';
+
+/** Texto e cor da célula da grade de pedidos. */
+export function celula(p: Pick<Pedido, 'opcao' | 'quantidade' | 'marmitao'> | undefined): {
+  rotulo: string;
+  tipo: TipoCelula;
+} {
+  if (!p) return { rotulo: '–', tipo: 'vazio' };
+  const base = `${p.quantidade > 1 ? `${p.quantidade} ` : ''}${SIGLA[p.opcao]}${p.marmitao ? '+M' : ''}`;
+  const tipo: TipoCelula = p.marmitao ? 'marmitao' : p.opcao === 'VEG' ? 'veg' : 'normal';
+  return { rotulo: base, tipo };
+}
 
 const NOMES = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
 const SIGLAS = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];

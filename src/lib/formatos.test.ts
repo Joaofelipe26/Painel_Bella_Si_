@@ -1,5 +1,27 @@
 import { describe, expect, it } from 'vitest';
-import { dataCurta, nomeDoDia, siglaDoDia, textoFaltam, tituloHoje } from './formatos';
+import { celula, dataCurta, nomeDoDia, siglaDoDia, textoFaltam, tituloHoje } from './formatos';
+
+describe('celula', () => {
+  const p = { clienteId: 1, data: '2026-11-11', anotacao: null };
+  it('sem pedido', () => {
+    expect(celula(undefined)).toEqual({ rotulo: '–', tipo: 'vazio' });
+  });
+  it('prato do dia', () => {
+    expect(celula({ ...p, opcao: 'PD', quantidade: 1, marmitao: false })).toEqual({ rotulo: 'PD', tipo: 'normal' });
+  });
+  it('vegetariano', () => {
+    expect(celula({ ...p, opcao: 'VEG', quantidade: 1, marmitao: false })).toEqual({ rotulo: 'V', tipo: 'veg' });
+  });
+  it('basiquinho', () => {
+    expect(celula({ ...p, opcao: 'BASIC_F', quantidade: 1, marmitao: false })).toEqual({ rotulo: 'Basic F', tipo: 'normal' });
+  });
+  it('marmitão', () => {
+    expect(celula({ ...p, opcao: 'PD', quantidade: 1, marmitao: true })).toEqual({ rotulo: 'PD+M', tipo: 'marmitao' });
+  });
+  it('duas marmitas', () => {
+    expect(celula({ ...p, opcao: 'PD', quantidade: 2, marmitao: false })).toEqual({ rotulo: '2 PD', tipo: 'normal' });
+  });
+});
 
 describe('formatos', () => {
   it('dataCurta', () => {
