@@ -1,0 +1,10 @@
+.logo {
+  font-family: var(--fonte-logo);
+  font-weight: 700;
+  line-height: 1;
+  color: var(--cor-verde);
+}
+
+.claro {
+  color: var(--cor-branco);
+}

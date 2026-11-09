@@ -1,0 +1,27 @@
+.menu {
+  position: fixed;
+  inset: auto 0 0 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  background: var(--cor-branco);
+  border-top: 1px solid var(--cor-borda);
+  padding-bottom: env(safe-area-inset-bottom);
+  z-index: 10;
+}
+
+.item {
+  min-height: var(--altura-menu);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--texto-16);
+  color: var(--cor-texto-suave);
+  text-decoration: none;
+  border-top: 4px solid transparent;
+}
+
+.ativo {
+  color: var(--cor-verde);
+  font-weight: var(--peso-forte);
+  border-top-color: var(--cor-verde);
+}

@@ -1,0 +1,20 @@
+.aviso {
+  border-radius: var(--raio-g);
+  padding: var(--espaco-3) var(--espaco-4);
+  font-size: var(--texto-18);
+}
+
+.info,
+.erro {
+  background: var(--cor-laranja-claro);
+  color: var(--cor-aviso-texto);
+}
+
+.erro {
+  font-weight: var(--peso-forte);
+}
+
+.ok {
+  background: var(--cor-verde-fundo);
+  color: var(--cor-verde-escuro);
+}

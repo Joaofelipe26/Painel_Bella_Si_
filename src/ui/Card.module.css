@@ -1,0 +1,9 @@
+.card {
+  background: var(--cor-branco);
+  border-radius: var(--raio-g);
+  padding: var(--espaco-4);
+}
+
+.feito {
+  background: var(--cor-verde-fundo);
+}

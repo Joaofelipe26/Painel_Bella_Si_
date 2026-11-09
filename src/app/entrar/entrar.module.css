@@ -1,0 +1,52 @@
+.pagina {
+  min-height: 100dvh;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: var(--espaco-6) var(--espaco-5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--espaco-6);
+}
+
+.marca {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--espaco-1);
+}
+
+.sub {
+  font-size: var(--texto-16);
+  font-weight: var(--peso-forte);
+  letter-spacing: 0.12em;
+  color: var(--cor-texto-suave);
+}
+
+.titulo {
+  font-size: var(--texto-22);
+  font-weight: var(--peso-forte);
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+.rotulo {
+  font-size: var(--texto-18);
+  font-weight: var(--peso-medio);
+}
+
+.campo {
+  height: var(--altura-botao);
+  border-radius: var(--raio-m);
+  border: 2px solid var(--cor-borda-tracejada);
+  background: var(--cor-branco);
+  padding: 0 var(--espaco-4);
+  font-size: var(--texto-26);
+  letter-spacing: 0.3em;
+  text-align: center;
+}

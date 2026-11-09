@@ -1,0 +1,57 @@
+/* Design system do Painel Bella Si. Os componentes usam só estes tokens. */
+:root {
+  /* Cores */
+  --cor-verde: #3F5A1E;
+  --cor-verde-escuro: #2B3F14;
+  --cor-verde-folha: #6E9A2E; /* só decoração, nunca texto */
+  --cor-verde-claro: #DCE8C8;
+  --cor-verde-fundo: #E8EFDC;
+  --cor-laranja: #E8742A; /* fundo com texto escuro */
+  --cor-laranja-texto: #B4521A;
+  --cor-laranja-claro: #FBE9DC;
+  --cor-aviso-texto: #7A3410;
+  --cor-creme: #F7F3E8;
+  --cor-creme-escuro: #F1EEE4;
+  --cor-branco: #FFFFFF;
+  --cor-texto: #24301A;
+  --cor-texto-suave: #4A5440;
+  --cor-borda: #E2DCCB;
+  --cor-borda-tracejada: #B9B2A0;
+
+  /* Tipografia */
+  --fonte-texto: var(--fonte-nunito), system-ui, sans-serif;
+  --fonte-logo: var(--fonte-dancing), cursive;
+  --texto-16: 1rem;
+  --texto-18: 1.125rem;
+  --texto-20: 1.25rem;
+  --texto-22: 1.375rem;
+  --texto-26: 1.625rem;
+  --texto-28: 1.75rem;
+  --texto-32: 2rem;
+  --peso-normal: 400;
+  --peso-medio: 600;
+  --peso-forte: 800;
+
+  /* Espaço */
+  --espaco-1: 4px;
+  --espaco-2: 8px;
+  --espaco-3: 12px;
+  --espaco-4: 16px;
+  --espaco-5: 20px;
+  --espaco-6: 24px;
+
+  /* Raio */
+  --raio-p: 10px;
+  --raio-m: 12px;
+  --raio-g: 16px;
+  --raio-xg: 20px;
+  --raio-total: 999px;
+
+  /* Toque */
+  --altura-botao: 56px;
+  --altura-celula: 44px;
+  --altura-menu: 64px;
+
+  /* Foco */
+  --foco: 3px solid var(--cor-laranja-texto);
+}

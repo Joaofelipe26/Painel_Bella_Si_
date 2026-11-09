@@ -1,0 +1,6 @@
+.painel {
+  max-width: 640px;
+  margin: 0 auto;
+  min-height: 100dvh;
+  padding-bottom: calc(var(--altura-menu) + env(safe-area-inset-bottom) + var(--espaco-4));
+}

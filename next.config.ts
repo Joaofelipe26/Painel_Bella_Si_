@@ -1,9 +1,8 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // PGlite (banco do computador) usa WebAssembly e fica fora do bundle.
+  serverExternalPackages: ['@electric-sql/pglite'],
 };
 
 export default nextConfig;
