@@ -40,15 +40,16 @@ Menu inferior em todas as telas: **Hoje, Pedidos, Entregas, Cadastros.**
 | Plano 01 | 6 marmitas na semana. Na sexta, a folha começa com quantidade 2. |
 | Plano 02 | 5 marmitas na semana. Avulso: sem meta. |
 | Levas | 3 levas. Cada cliente tem uma leva e uma ordem na rota. Empate na ordem: ordem alfabética do nome. |
-| Repetir semana passada | Copia os pedidos da semana anterior só para os dias vazios. Não apaga nada. Ignora clientes desativados. |
-| Cliente desativado | Some da grade e dos cadastros ativos. Os pedidos já feitos continuam em Hoje e Entregas. |
+| Repetir semana passada | Copia os pedidos da semana anterior só para os dias vazios que ainda estão abertos (antes do corte). Não apaga nada. Ignora clientes desativados. |
+| Cliente desativado | Some da grade e dos cadastros ativos. Os pedidos depois de hoje são apagados. Os pedidos de hoje continuam em Hoje e Entregas. |
 
 ## 4. Acesso
 
-- Um PIN único para a Simone e o Bruno, na variável de ambiente `APP_PIN`.
+- Um PIN único para a Simone e o Bruno, na variável de ambiente `APP_PIN`. Em produção, o PIN tem 6 dígitos ou mais.
 - Depois do PIN certo, o app grava um cookie `httpOnly` assinado (`AUTH_SECRET`), válido por 90 dias.
-- Sem cookie válido, toda rota manda para `/entrar`.
-- Depois de 5 PINs errados seguidos, o app espera 30 segundos antes de aceitar outro (contador no cookie).
+- Sem cookie válido, toda página manda para `/entrar`. Uma ação do servidor sem sessão recebe 401. Cada ação também confere a sessão.
+- PINs errados seguidos ficam contados **no banco** (tabela `tentativas_pin`), não no navegador. Espera: 5 erros → 30 s, 10 → 5 min, 20 → 1 h. O PIN certo zera a conta.
+- (Revisão de 2026-11-09: o contador no cookie foi desfeito, porque um atacante podia apagar o cookie e testar os 10 mil PINs em minutos.)
 
 ## 5. Arquitetura
 
@@ -95,13 +96,14 @@ Tokens em `src/ui/tokens.css`. Os componentes usam só tokens.
 
 - Server Actions validam com Zod e devolvem `{ ok: true }` ou `{ ok: false, erro }`, com frase simples (ex.: "Escolha um dia de segunda a sexta.").
 - Falha de conexão: página de erro com o botão "Tentar de novo".
+- Falha de rede em um toque (salvar, entregue): aviso "Sem conexão. Tente de novo." sem quebrar a tela.
 
 ## 9. Testes e publicação
 
 - **Vitest:** regras de `src/dominio/` (teste primeiro) e consultas do banco com PGlite.
 - **Playwright:** um fluxo (PIN → marcar pedido → ver Hoje → marcar entrega) e capturas de todas as telas em 360 e 390 px. O Claude olha as capturas e corrige.
 - **Revisão:** `web-design-guidelines` e revisão final de código por um revisor novo.
-- **Publicação:** o João cria o repositório `Joaofelipe26/painel-bella-si` no GitHub e o banco Neon no painel da Vercel. Variáveis: `DATABASE_URL`, `AUTH_SECRET`, `APP_PIN`.
+- **Publicação:** repositório `Joaofelipe26/Painel_Bella_Si_` no GitHub. O João cria o banco Neon no painel da Vercel. Variáveis: `DATABASE_URL`, `AUTH_SECRET`, `APP_PIN` (6 dígitos ou mais). As migrações rodam só no build de produção.
 
 ## 10. Fora desta versão (para depois, sem refazer nada)
 

@@ -47,7 +47,7 @@ Version: Stage 1, light version (4 screens).
 |---|---|---|
 | `DATABASE_URL` | Production | Neon connection string. The Vercel–Neon integration sets it. Leave empty on your computer. |
 | `AUTH_SECRET` | Production | Long random text. It signs the login cookie. Required in production. |
-| `APP_PIN` | Production | PIN for Simone and Bruno. Required in production. |
+| `APP_PIN` | Production | PIN for Simone and Bruno. Required in production, 6 or more digits. |
 
 See `.env.example`.
 
@@ -70,7 +70,9 @@ Note: stop any other `next dev` in this folder first. Next.js allows one dev ser
 ## Deploy
 
 - Vercel project `painel-bella-si`, team `sinapse-labs`. A push to `main` deploys.
-- The `vercel-build` script applies the database migrations (`src/db/migrar.ts`) and then runs `next build`.
+- The `vercel-build` script applies the database migrations (`src/db/migrar.ts`, production builds only) and then runs `next build`.
+- Failed PIN attempts are counted in the database (`tentativas_pin`). Waits: 5 errors → 30 s, 10 → 5 min, 20 → 1 h.
+- To sign out a lost phone, change `AUTH_SECRET` in Vercel and redeploy. Every session ends.
 - The production database starts empty. Simone adds customers in **Cadastros**. The demo data script refuses to run when `DATABASE_URL` is set.
 
 ## Database changes
