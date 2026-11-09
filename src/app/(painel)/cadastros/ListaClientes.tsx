@@ -102,7 +102,7 @@ function BotaoAtivo({ id, ativo, aoTerminar }: { id: number; ativo: boolean; aoT
       variante="contorno"
       disabled={pendente}
       onClick={() => {
-        if (ativo && !window.confirm('Desativar este cliente? Ele some da grade de pedidos.')) return;
+        if (ativo && !window.confirm('Desativar este cliente? Ele some da grade, e os pedidos dele a partir de amanhã são apagados.')) return;
         iniciar(async () => {
           const r = await chamarAcao(() => definirAtivoAcao(id, !ativo));
           aoTerminar(r.ok ? (ativo ? 'Cliente desativado.' : 'Cliente reativado.') : r.erro);

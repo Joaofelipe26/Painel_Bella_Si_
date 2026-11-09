@@ -35,7 +35,7 @@ export function GradeSemana({ segunda, clientes, pedidos, cardapio }: Props) {
   const visiveis = clientes.filter((c) => normalizar(c.nome).includes(filtro));
 
   function repetir() {
-    if (!window.confirm('Copiar os pedidos da semana passada para os dias vazios?')) return;
+    if (!window.confirm('Copiar os pedidos da semana passada para os dias vazios que ainda não fecharam?')) return;
     iniciarRepetir(async () => {
       const r = await chamarAcao(() => repetirSemanaAcao(segunda));
       if (!r.ok) setMensagem({ tipo: 'erro', texto: r.erro });

@@ -1,7 +1,8 @@
-import { asc, eq } from 'drizzle-orm';
+import { and, asc, eq, gt } from 'drizzle-orm';
+import { hojeSP } from '@/dominio/datas';
 import type { Cliente } from '@/dominio/tipos';
 import type { Db } from '../cliente';
-import { clientes } from '../schema';
+import { clientes, pedidos } from '../schema';
 
 export async function listarClientes(db: Db, opcoes: { incluirInativos?: boolean } = {}): Promise<Cliente[]> {
   const consulta = db.select().from(clientes);
@@ -21,6 +22,10 @@ export async function salvarCliente(db: Db, dados: Omit<Cliente, 'id'> & { id?: 
   return linha;
 }
 
-export async function definirAtivo(db: Db, id: number, ativo: boolean): Promise<void> {
+/** Ao desativar, apaga os pedidos depois de `hoje`. Os de hoje e os passados ficam (entrega e histórico). */
+export async function definirAtivo(db: Db, id: number, ativo: boolean, hoje: string = hojeSP(new Date())): Promise<void> {
   await db.update(clientes).set({ ativo }).where(eq(clientes.id, id));
+  if (!ativo) {
+    await db.delete(pedidos).where(and(eq(pedidos.clienteId, id), gt(pedidos.data, hoje)));
+  }
 }

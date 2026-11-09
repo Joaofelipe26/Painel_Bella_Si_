@@ -48,11 +48,11 @@ export async function definirEntregue(db: Db, pedidoId: number, entregue: boolea
 }
 
 /** Copia a semana anterior para os dias vazios da semana que começa em `segunda`. Devolve quantos criou. */
-export async function repetirSemanaAnterior(db: Db, segunda: string): Promise<number> {
+export async function repetirSemanaAnterior(db: Db, segunda: string, agora: Date = new Date()): Promise<number> {
   const anteriores = await pedidosDoPeriodo(db, somarDias(segunda, -7), somarDias(segunda, -3));
   const atuais = await pedidosDoPeriodo(db, segunda, somarDias(segunda, 4));
   const clientes = await listarClientes(db);
-  const novos = copiarSemanaAnterior(anteriores, atuais, clientes);
+  const novos = copiarSemanaAnterior(anteriores, atuais, clientes, agora);
   if (novos.length === 0) return 0;
   const criados = await db.insert(pedidos).values(novos).onConflictDoNothing().returning({ id: pedidos.id });
   return criados.length;

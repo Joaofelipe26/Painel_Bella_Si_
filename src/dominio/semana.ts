@@ -1,4 +1,4 @@
-import { diaDaSemana, somarDias } from './datas';
+import { diaDaSemana, diaEstaAberto, somarDias } from './datas';
 import type { Cliente, Pedido, Plano } from './tipos';
 
 const SEXTA = 5;
@@ -8,14 +8,15 @@ export function quantidadeSugerida(plano: Plano, data: string): number {
   return plano === 'P01' && diaDaSemana(data) === SEXTA ? 2 : 1;
 }
 
-/** Pedidos novos para a semana atual, só nos dias vazios de clientes ativos. */
-export function copiarSemanaAnterior(anteriores: Pedido[], atuais: Pedido[], clientes: Cliente[]): Pedido[] {
+/** Pedidos novos para a semana atual: só dias vazios, ainda abertos, de clientes ativos. */
+export function copiarSemanaAnterior(anteriores: Pedido[], atuais: Pedido[], clientes: Cliente[], agora: Date): Pedido[] {
   const ativos = new Set(clientes.filter((c) => c.ativo).map((c) => c.id));
   const ocupados = new Set(atuais.map((p) => `${p.clienteId}|${p.data}`));
   const novos: Pedido[] = [];
   for (const p of anteriores) {
     if (!ativos.has(p.clienteId)) continue;
     const data = somarDias(p.data, 7);
+    if (!diaEstaAberto(data, agora)) continue;
     if (ocupados.has(`${p.clienteId}|${data}`)) continue;
     novos.push({
       clienteId: p.clienteId,

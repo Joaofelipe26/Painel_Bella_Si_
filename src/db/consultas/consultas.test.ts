@@ -14,6 +14,7 @@ import {
 } from './pedidos';
 
 let db: Db;
+const domingo = new Date('2026-11-15T15:00:00Z');
 
 const novoCliente = {
   nome: 'Edu',
@@ -42,10 +43,22 @@ describe('clientes', () => {
     expect((await listarClientes(db)).map((x) => x.nome)).toEqual(['Eduardo']);
   });
 
+  it('desativar apaga os pedidos depois de hoje e mantém os de hoje e os passados', async () => {
+    const c = await salvarCliente(db, novoCliente);
+    for (const data of ['2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13']) {
+      await salvarPedido(db, { ...pedidoBase, clienteId: c.id, data });
+    }
+    await definirAtivo(db, c.id, false, '2026-11-11');
+    expect((await pedidosDoPeriodo(db, '2026-11-09', '2026-11-13')).map((p) => p.data)).toEqual([
+      '2026-11-10',
+      '2026-11-11',
+    ]);
+  });
+
   it('cliente desativado some da lista, mas o pedido do dia continua', async () => {
     const c = await salvarCliente(db, novoCliente);
     await salvarPedido(db, { ...pedidoBase, clienteId: c.id });
-    await definirAtivo(db, c.id, false);
+    await definirAtivo(db, c.id, false, '2026-11-11');
     expect(await listarClientes(db)).toEqual([]);
     expect(await listarClientes(db, { incluirInativos: true })).toHaveLength(1);
     expect(await pedidosDoDia(db, '2026-11-11')).toHaveLength(1);
@@ -126,14 +139,14 @@ describe('pedidos', () => {
       await salvarPedido(db, { ...pedidoBase, clienteId: c.id, data });
     }
     await salvarPedido(db, { ...pedidoBase, clienteId: c.id, data: '2026-11-17', opcao: 'BASIC_F' });
-    expect(await repetirSemanaAnterior(db, '2026-11-16')).toBe(2);
+    expect(await repetirSemanaAnterior(db, '2026-11-16', domingo)).toBe(2);
     const semana = await pedidosDoPeriodo(db, '2026-11-16', '2026-11-20');
     expect(semana.map((p) => [p.data, p.opcao])).toEqual([
       ['2026-11-16', 'PD'],
       ['2026-11-17', 'BASIC_F'],
       ['2026-11-18', 'PD'],
     ]);
-    expect(await repetirSemanaAnterior(db, '2026-11-16')).toBe(0);
+    expect(await repetirSemanaAnterior(db, '2026-11-16', domingo)).toBe(0);
   });
 });
 
