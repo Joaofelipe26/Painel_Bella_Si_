@@ -1,5 +1,20 @@
-import { diaDaSemana } from '@/dominio/datas';
-import { SIGLA, type Pedido } from '@/dominio/tipos';
+import { diaDaSemana, ehDiaUtil, hojeSP, minutosAteCorte } from '@/dominio/datas';
+import { HORARIO_CORTE, SIGLA, type Pedido } from '@/dominio/tipos';
+
+/** '09:00' → '9h'; '09:30' → '9h30' */
+function horaCurta(horario: string): string {
+  const [h, m] = horario.split(':');
+  return `${Number(h)}h${m === '00' ? '' : m}`;
+}
+
+/** Linha do corte na tela Hoje. */
+export function textoCorte(agora: Date): string {
+  const hoje = hojeSP(agora);
+  if (!ehDiaUtil(hoje)) return 'Sem entregas hoje';
+  const faltam = minutosAteCorte(hoje, agora);
+  if (faltam === null) return 'Pedidos fechados';
+  return `Pedidos fecham às ${horaCurta(HORARIO_CORTE)} · ${textoFaltam(faltam)}`;
+}
 
 export type TipoCelula = 'vazio' | 'normal' | 'veg' | 'marmitao';
 

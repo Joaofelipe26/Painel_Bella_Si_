@@ -1,5 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { celula, dataCurta, nomeDoDia, siglaDoDia, textoFaltam, tituloHoje } from './formatos';
+import { celula, dataCurta, nomeDoDia, siglaDoDia, textoCorte, textoFaltam, tituloHoje } from './formatos';
+
+describe('textoCorte', () => {
+  it('antes do corte', () => {
+    expect(textoCorte(new Date('2026-11-11T10:40:00Z'))).toBe('Pedidos fecham às 9h · faltam 1h20');
+  });
+  it('depois do corte', () => {
+    expect(textoCorte(new Date('2026-11-11T12:10:00Z'))).toBe('Pedidos fechados');
+  });
+  it('fim de semana', () => {
+    expect(textoCorte(new Date('2026-11-14T12:10:00Z'))).toBe('Sem entregas hoje');
+  });
+});
 
 describe('celula', () => {
   const p = { clienteId: 1, data: '2026-11-11', anotacao: null };

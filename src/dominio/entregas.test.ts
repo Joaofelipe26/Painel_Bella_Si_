@@ -1,5 +1,17 @@
 import { describe, expect, it } from 'vitest';
-import { listaDeEntregas, resumoDoPedido } from './entregas';
+import { levaPadrao, listaDeEntregas, resumoDoPedido } from './entregas';
+
+describe('levaPadrao', () => {
+  it('abre a primeira leva com entrega pendente', () => {
+    expect(levaPadrao({ 1: [true, true], 2: [false], 3: [false] })).toBe(2);
+  });
+  it('pula leva vazia', () => {
+    expect(levaPadrao({ 1: [], 2: [], 3: [false] })).toBe(3);
+  });
+  it('tudo entregue ou vazio abre a 1ª leva', () => {
+    expect(levaPadrao({ 1: [true], 2: [], 3: [] })).toBe(1);
+  });
+});
 import { cliente, pedido } from './fixtures';
 
 const fernando = cliente(1, 'Fernando', { leva: 1, ordemRota: 1 });

@@ -26,6 +26,14 @@ export function listaDeEntregas(pedidos: Pedido[], clientes: Cliente[], leva: Le
   }));
 }
 
+/** Primeira leva com entrega pendente; sem pendências, a 1ª leva. Recebe o "entregue" de cada parada. */
+export function levaPadrao(entreguesPorLeva: Record<Leva, boolean[]>): Leva {
+  for (const leva of [1, 2, 3] as const) {
+    if (entreguesPorLeva[leva].some((e) => !e)) return leva;
+  }
+  return 1;
+}
+
 const NOME: Record<Opcao, { um: string; varios: string; marmitao: string }> = {
   PD: { um: 'prato do dia', varios: 'pratos do dia', marmitao: 'prato do dia' },
   VEG: { um: 'vegetariano', varios: 'vegetarianos', marmitao: 'vegetariano' },
