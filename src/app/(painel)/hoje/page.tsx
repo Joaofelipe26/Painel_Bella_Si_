@@ -5,7 +5,7 @@ import { listarClientes } from '@/db/consultas/clientes';
 import { pedidosDoDia } from '@/db/consultas/pedidos';
 import { hojeSP } from '@/dominio/datas';
 import { contarPorLeva, contarProducao, nomeDaLinha, textoResumoLeva } from '@/dominio/producao';
-import { OPCOES } from '@/dominio/tipos';
+import { OPCOES_TODAS } from '@/dominio/tipos';
 import { textoCorte, tituloHoje } from '@/lib/formatos';
 import { Cabecalho } from '@/ui/Cabecalho';
 import estilos from './hoje.module.css';
@@ -38,7 +38,7 @@ export default async function PaginaHoje() {
         ) : (
           <>
             <div className={estilos.lista}>
-              {OPCOES.filter((o) => producao.porOpcao[o] > 0).map((o) => {
+              {OPCOES_TODAS.filter((o) => producao.porOpcao[o] > 0).map((o) => {
                 const { titulo, detalhe } = nomeDaLinha(o, cardapio);
                 return (
                   <div key={o} className={estilos.linha}>

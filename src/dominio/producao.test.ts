@@ -12,6 +12,13 @@ describe('contarProducao', () => {
     expect(r.marmitoes).toEqual([{ clienteId: 4, quantidade: 1 }]);
   });
 
+  it('conta um pedido antigo de basiquinho de tilápia', () => {
+    const r = contarProducao([p(1, 'BASIC_T'), p(2, 'PD')]);
+    expect(r.porOpcao.BASIC_T).toBe(1);
+    expect(r.total).toBe(2);
+    expect(textoResumoLeva(r)).toBe('1 PD, 1 Basic T');
+  });
+
   it('lista vazia dá zero', () => {
     expect(contarProducao([]).total).toBe(0);
   });

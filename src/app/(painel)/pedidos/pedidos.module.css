@@ -213,7 +213,6 @@ p.vazio {
 }
 
 .semPedido {
-  grid-column: 1 / -1;
   align-items: center;
 }
 

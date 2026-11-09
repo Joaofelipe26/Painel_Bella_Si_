@@ -3,7 +3,11 @@ export type Basico = 'BASIC_C' | 'BASIC_F' | 'BASIC_O' | 'BASIC_T';
 export type Plano = 'P01' | 'P02' | 'AVULSO';
 export type Leva = 1 | 2 | 3;
 
-export const OPCOES: readonly Opcao[] = ['PD', 'VEG', 'BASIC_C', 'BASIC_F', 'BASIC_O', 'BASIC_T'];
+/** Opções que a Simone pode escolher. A tilápia é o prato do dia da sexta, não um basiquinho. */
+export const OPCOES: readonly Opcao[] = ['PD', 'VEG', 'BASIC_C', 'BASIC_F', 'BASIC_O'];
+/** Todas as opções, inclusive BASIC_T, para contar e mostrar pedidos antigos. */
+export const OPCOES_TODAS: readonly Opcao[] = [...OPCOES, 'BASIC_T'];
+export const BASICOS: readonly Basico[] = ['BASIC_C', 'BASIC_F', 'BASIC_O'];
 export const PLANOS: readonly Plano[] = ['P01', 'P02', 'AVULSO'];
 export const LEVAS: readonly Leva[] = [1, 2, 3];
 

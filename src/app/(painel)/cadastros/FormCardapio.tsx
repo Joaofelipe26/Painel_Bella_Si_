@@ -2,8 +2,8 @@
 
 import Link from 'next/link';
 import { useActionState } from 'react';
-import { diasUteis, somarDias } from '@/dominio/datas';
-import { NOME_BASICO, type CardapioDia } from '@/dominio/tipos';
+import { diaDaSemana, diasUteis, somarDias } from '@/dominio/datas';
+import { BASICOS, NOME_BASICO, type CardapioDia } from '@/dominio/tipos';
 import { dataCurta, nomeDoDia } from '@/lib/formatos';
 import type { RespostaAcao } from '@/lib/resultado';
 import { chamarAcao } from '@/lib/rede';
@@ -44,7 +44,13 @@ export function FormCardapio({ segunda, dias }: { segunda: string; dias: Record<
               <input type="hidden" name="data" value={data} />
               <label className={estilos.grupo}>
                 <span className={estilos.rotulo}>Prato do dia</span>
-                <input name={`pratoDia-${data}`} defaultValue={d?.pratoDia ?? ''} className={estilos.campo} autoComplete="off" />
+                <input
+                  name={`pratoDia-${data}`}
+                  defaultValue={d?.pratoDia ?? ''}
+                  placeholder={diaDaSemana(data) === 5 ? 'Filé de tilápia' : undefined}
+                  className={estilos.campo}
+                  autoComplete="off"
+                />
               </label>
               <label className={estilos.grupo}>
                 <span className={estilos.rotulo}>Acompanhamento</span>
@@ -64,9 +70,10 @@ export function FormCardapio({ segunda, dias }: { segunda: string; dias: Record<
 
         <div className={estilos.basicos}>
           <p className={estilos.diaTitulo}>Basiquinhos (todos os dias)</p>
+          <p>Na sexta, o prato do dia é a tilápia.</p>
           <ul>
-            {Object.values(NOME_BASICO).map((n) => (
-              <li key={n}>{n} + arroz + feijão + legumes</li>
+            {BASICOS.map((b) => (
+              <li key={b}>{NOME_BASICO[b]} + arroz + feijão + legumes</li>
             ))}
           </ul>
         </div>

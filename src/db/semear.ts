@@ -56,8 +56,8 @@ const ESCOLHAS: Record<string, (Opcao | null)[]> = {
   'Sr. Jorge': ['BASIC_F', 'BASIC_F', 'BASIC_F', 'BASIC_F', 'BASIC_F'],
   Carla: ['PD', null, 'PD', null, 'PD'],
   Alexandra: ['VEG', 'VEG', 'VEG', 'VEG', 'VEG'],
-  'Maria Isabel': ['PD', 'PD', 'PD', 'BASIC_T', 'PD'],
-  Rita: [null, 'BASIC_T', 'BASIC_T', null, 'BASIC_T'],
+  'Maria Isabel': ['PD', 'PD', 'PD', 'BASIC_O', 'PD'],
+  Rita: [null, 'BASIC_C', 'BASIC_C', null, 'PD'],
   Paulo: ['VEG', 'PD', 'VEG', 'PD', 'VEG'],
 };
 

@@ -19,6 +19,13 @@ describe('validarPedido', () => {
     expect(validarPedido({ ...base, opcao: 'X' })).toEqual({ ok: false, erro: 'Escolha uma opção.' });
   });
 
+  it('recusa o basiquinho de tilápia, que saiu do cardápio', () => {
+    expect(validarPedido({ ...base, opcao: 'BASIC_T' })).toEqual({
+      ok: false,
+      erro: 'O basiquinho de tilápia saiu do cardápio. Na sexta, a tilápia é o prato do dia.',
+    });
+  });
+
   it('recusa sábado', () => {
     expect(validarPedido({ ...base, data: '2026-11-14' })).toEqual({
       ok: false,

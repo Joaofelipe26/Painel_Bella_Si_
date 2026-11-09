@@ -1,4 +1,4 @@
-import { LEVAS, NOME_BASICO, OPCOES } from './tipos';
+import { LEVAS, NOME_BASICO, OPCOES_TODAS } from './tipos';
 import type { Basico, CardapioDia, Cliente, Leva, Opcao, Pedido } from './tipos';
 
 export interface ResumoProducao {
@@ -8,7 +8,7 @@ export interface ResumoProducao {
 }
 
 export function contarProducao(pedidos: Pedido[]): ResumoProducao {
-  const porOpcao = Object.fromEntries(OPCOES.map((o) => [o, 0])) as Record<Opcao, number>;
+  const porOpcao = Object.fromEntries(OPCOES_TODAS.map((o) => [o, 0])) as Record<Opcao, number>;
   const marmitoes: ResumoProducao['marmitoes'] = [];
   let total = 0;
   for (const p of pedidos) {
@@ -61,7 +61,7 @@ const SIGLA_RESUMO: Record<Opcao, string> = {
 
 export function textoResumoLeva(r: ResumoProducao): string {
   if (r.total === 0) return 'Sem pedidos';
-  return OPCOES.filter((o) => r.porOpcao[o] > 0)
+  return OPCOES_TODAS.filter((o) => r.porOpcao[o] > 0)
     .map((o) => `${r.porOpcao[o]} ${SIGLA_RESUMO[o]}`)
     .join(', ');
 }

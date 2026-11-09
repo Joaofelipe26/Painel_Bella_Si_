@@ -115,7 +115,7 @@ export function GradeSemana({ segunda, clientes, pedidos, cardapio }: Props) {
         )}
 
         <p className={estilos.legenda}>
-          PD = prato do dia · V = vegetariano · Basic C = carne · Basic F = frango · Basic O = omelete · Basic T = tilápia
+          PD = prato do dia · V = vegetariano · Basic C = carne · Basic F = frango · Basic O = omelete
           · M = marmitão · 2 = duas marmitas
         </p>
 

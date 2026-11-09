@@ -9,7 +9,10 @@ const esquemaPedido = z.object({
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'Data inválida.')
     .refine(ehDiaUtil, 'Escolha um dia de segunda a sexta.'),
-  opcao: z.enum(OPCOES as [Opcao, ...Opcao[]], { error: 'Escolha uma opção.' }),
+  opcao: z
+    .string({ error: 'Escolha uma opção.' })
+    .refine((o) => o !== 'BASIC_T', 'O basiquinho de tilápia saiu do cardápio. Na sexta, a tilápia é o prato do dia.')
+    .pipe(z.enum(OPCOES as [Opcao, ...Opcao[]], { error: 'Escolha uma opção.' })),
   quantidade: z
     .number({ error: 'A quantidade vai de 1 a 3.' })
     .int()
