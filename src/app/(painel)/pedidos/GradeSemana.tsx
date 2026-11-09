@@ -5,6 +5,7 @@ import { useState, useTransition } from 'react';
 import { diasUteis, somarDias } from '@/dominio/datas';
 import { NOME_PLANO, type CardapioDia, type Cliente, type Pedido } from '@/dominio/tipos';
 import { celula, dataCurta, nomeDoDia, siglaDoDia } from '@/lib/formatos';
+import { chamarAcao } from '@/lib/rede';
 import { Aviso } from '@/ui/Aviso';
 import { Botao } from '@/ui/Botao';
 import { repetirSemanaAcao } from './acoes';
@@ -36,7 +37,7 @@ export function GradeSemana({ segunda, clientes, pedidos, cardapio }: Props) {
   function repetir() {
     if (!window.confirm('Copiar os pedidos da semana passada para os dias vazios?')) return;
     iniciarRepetir(async () => {
-      const r = await repetirSemanaAcao(segunda);
+      const r = await chamarAcao(() => repetirSemanaAcao(segunda));
       if (!r.ok) setMensagem({ tipo: 'erro', texto: r.erro });
       else if (r.criados === 0) setMensagem({ tipo: 'ok', texto: 'Nada para copiar.' });
       else setMensagem({ tipo: 'ok', texto: `${r.criados} ${r.criados === 1 ? 'pedido copiado' : 'pedidos copiados'}.` });
@@ -128,7 +129,6 @@ export function GradeSemana({ segunda, clientes, pedidos, cardapio }: Props) {
         pedido={aberta ? porChave.get(`${aberta.cliente.id}|${aberta.data}`) : undefined}
         cardapio={aberta ? cardapio[aberta.data] ?? null : null}
         aoFechar={() => setAberta(null)}
-        aoErro={(texto) => setMensagem({ tipo: 'erro', texto })}
       />
     </>
   );

@@ -6,13 +6,17 @@ import { diasUteis, somarDias } from '@/dominio/datas';
 import { NOME_BASICO, type CardapioDia } from '@/dominio/tipos';
 import { dataCurta, nomeDoDia } from '@/lib/formatos';
 import type { RespostaAcao } from '@/lib/resultado';
+import { chamarAcao } from '@/lib/rede';
 import { Aviso } from '@/ui/Aviso';
 import { Botao } from '@/ui/Botao';
 import { salvarCardapioAcao } from './acoes';
 import estilos from './cadastros.module.css';
 
 export function FormCardapio({ segunda, dias }: { segunda: string; dias: Record<string, CardapioDia | null> }) {
-  const [estado, acao, pendente] = useActionState<RespostaAcao | null, FormData>(salvarCardapioAcao, null);
+  const [estado, acao, pendente] = useActionState<RespostaAcao | null, FormData>(
+    (anterior, dados) => chamarAcao(() => salvarCardapioAcao(anterior, dados)),
+    null,
+  );
   const datas = diasUteis(segunda);
 
   return (

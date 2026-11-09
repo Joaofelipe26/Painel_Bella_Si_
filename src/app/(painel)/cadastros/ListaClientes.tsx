@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useState, useTransition } from 'react';
 import { NOME_PLANO, PLANOS, type Cliente } from '@/dominio/tipos';
 import type { RespostaAcao } from '@/lib/resultado';
+import { chamarAcao } from '@/lib/rede';
 import { Aviso } from '@/ui/Aviso';
 import { Botao } from '@/ui/Botao';
 import { Folha } from '@/ui/Folha';
@@ -103,7 +104,7 @@ function BotaoAtivo({ id, ativo, aoTerminar }: { id: number; ativo: boolean; aoT
       onClick={() => {
         if (ativo && !window.confirm('Desativar este cliente? Ele some da grade de pedidos.')) return;
         iniciar(async () => {
-          const r = await definirAtivoAcao(id, !ativo);
+          const r = await chamarAcao(() => definirAtivoAcao(id, !ativo));
           aoTerminar(r.ok ? (ativo ? 'Cliente desativado.' : 'Cliente reativado.') : r.erro);
         });
       }}
@@ -114,7 +115,10 @@ function BotaoAtivo({ id, ativo, aoTerminar }: { id: number; ativo: boolean; aoT
 }
 
 function FormCliente({ cliente, aoSalvar }: { cliente: Cliente | null; aoSalvar: (texto: string) => void }) {
-  const [estado, acao, pendente] = useActionState<RespostaAcao | null, FormData>(salvarClienteAcao, null);
+  const [estado, acao, pendente] = useActionState<RespostaAcao | null, FormData>(
+    (anterior, dados) => chamarAcao(() => salvarClienteAcao(anterior, dados)),
+    null,
+  );
 
   useEffect(() => {
     if (estado?.ok) aoSalvar(cliente ? 'Cliente salvo.' : 'Cliente cadastrado.');

@@ -6,6 +6,7 @@ import { nomeDaLinha } from '@/dominio/producao';
 import { quantidadeSugerida } from '@/dominio/semana';
 import { OPCOES, QUANTIDADE_MAX, QUANTIDADE_MIN, type CardapioDia, type Cliente, type Opcao, type Pedido } from '@/dominio/tipos';
 import { dataCurta, nomeDoDia } from '@/lib/formatos';
+import { chamarAcao } from '@/lib/rede';
 import { Aviso } from '@/ui/Aviso';
 import { Botao } from '@/ui/Botao';
 import { Folha } from '@/ui/Folha';
@@ -17,10 +18,9 @@ interface Props {
   pedido: Pedido | undefined;
   cardapio: CardapioDia | null;
   aoFechar: () => void;
-  aoErro: (texto: string) => void;
 }
 
-export function FolhaPedido({ aberta, pedido, cardapio, aoFechar, aoErro }: Props) {
+export function FolhaPedido({ aberta, pedido, cardapio, aoFechar }: Props) {
   const titulo = aberta ? `${aberta.cliente.nome} · ${nomeDoDia(aberta.data).toLowerCase()} ${dataCurta(aberta.data)}` : '';
   return (
     <Folha aberta={aberta !== null} aoFechar={aoFechar} titulo={titulo}>
@@ -32,7 +32,6 @@ export function FolhaPedido({ aberta, pedido, cardapio, aoFechar, aoErro }: Prop
           pedido={pedido}
           cardapio={cardapio}
           aoFechar={aoFechar}
-          aoErro={aoErro}
         />
       )}
     </Folha>
@@ -45,14 +44,12 @@ function Conteudo({
   pedido,
   cardapio,
   aoFechar,
-  aoErro,
 }: {
   cliente: Cliente;
   data: string;
   pedido: Pedido | undefined;
   cardapio: CardapioDia | null;
   aoFechar: () => void;
-  aoErro: (texto: string) => void;
 }) {
   const [opcao, setOpcao] = useState<Opcao | null>(pedido?.opcao ?? null);
   const [quantidade, setQuantidade] = useState(pedido?.quantidade ?? quantidadeSugerida(cliente.plano, data));
@@ -65,17 +62,15 @@ function Conteudo({
   function salvar() {
     setErro(null);
     iniciar(async () => {
-      const r =
+      const r = await chamarAcao(async () =>
         opcao === null
           ? pedido
-            ? await apagarPedidoAcao(cliente.id, data)
+            ? apagarPedidoAcao(cliente.id, data)
             : { ok: true as const }
-          : await salvarPedidoAcao({ clienteId: cliente.id, data, opcao, quantidade, marmitao, anotacao });
+          : salvarPedidoAcao({ clienteId: cliente.id, data, opcao, quantidade, marmitao, anotacao }),
+      );
       if (r.ok) aoFechar();
-      else {
-        setErro(r.erro);
-        aoErro(r.erro);
-      }
+      else setErro(r.erro);
     });
   }
 

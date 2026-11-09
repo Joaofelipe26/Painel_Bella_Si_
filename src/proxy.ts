@@ -10,6 +10,10 @@ export async function proxy(request: NextRequest) {
     return valido ? NextResponse.redirect(new URL('/hoje', request.url)) : NextResponse.next();
   }
   if (!valido) {
+    // Ação do servidor (POST com o cabeçalho next-action): 401, não redirecionamento.
+    if (request.headers.has('next-action')) {
+      return NextResponse.json({ erro: 'Sua sessão acabou. Entre de novo.' }, { status: 401 });
+    }
     return NextResponse.redirect(new URL('/entrar', request.url));
   }
   return NextResponse.next();

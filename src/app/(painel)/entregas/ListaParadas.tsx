@@ -2,6 +2,7 @@
 
 import { useOptimistic, useState, useTransition } from 'react';
 import type { Parada } from '@/dominio/entregas';
+import { chamarAcao } from '@/lib/rede';
 import { Aviso } from '@/ui/Aviso';
 import { classeBotao } from '@/ui/Botao';
 import { definirEntregueAcao } from './acoes';
@@ -26,7 +27,7 @@ export function ListaParadas({ paradas }: { paradas: Parada[] }) {
     setErro(null);
     iniciar(async () => {
       marcar({ id, entregue: desejado });
-      const r = await definirEntregueAcao(id, desejado);
+      const r = await chamarAcao(() => definirEntregueAcao(id, desejado));
       if (!r.ok) setErro(r.erro);
     });
   }
