@@ -8,6 +8,13 @@
       "when": 1794250957812,
       "tag": "0000_elite_microbe",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794253779433,
+      "tag": "0001_nasty_maximus",
+      "breakpoints": true
     }
   ]
 }

@@ -1,10 +1,7 @@
 import { jwtVerify, SignJWT } from 'jose';
 
 export const COOKIE_SESSAO = 'sessao';
-export const COOKIE_TENTATIVAS = 'tentativas';
 export const VALIDADE_DIAS = 90;
-const LIMITE_ERROS = 5;
-const ESPERA_MS = 30_000;
 
 const SEGREDO_DEV = 'segredo-so-para-o-computador-local-bella-si';
 const PIN_DEV = '1234';
@@ -18,13 +15,21 @@ function segredo(): Uint8Array {
   return new TextEncoder().encode(s);
 }
 
+/** Em produção, o PIN precisa de 6 dígitos ou mais (10^6 combinações). */
+export function pinServeParaProducao(pin: string): boolean {
+  return /^\d{6,}$/.test(pin);
+}
+
 function pinCerto(): string {
   const pin = process.env.APP_PIN;
-  if (!pin) {
-    if (process.env.NODE_ENV === 'production') throw new Error('APP_PIN não definida');
-    return PIN_DEV;
+  if (process.env.NODE_ENV === 'production') {
+    if (!pin || !pinServeParaProducao(pin)) {
+      console.error('APP_PIN ausente ou curto: use 6 dígitos ou mais.');
+      throw new Error('APP_PIN ausente ou com menos de 6 dígitos');
+    }
+    return pin;
   }
-  return pin;
+  return pin || PIN_DEV;
 }
 
 export async function criarToken(): Promise<string> {
@@ -61,6 +66,14 @@ export interface Tentativas {
   ultimoErro: number;
 }
 
+/** Espera depois de N erros seguidos: 5 → 30 s, 10 → 5 min, 20 → 1 h. */
+export function esperaMs(erros: number): number {
+  if (erros >= 20) return 60 * 60_000;
+  if (erros >= 10) return 5 * 60_000;
+  if (erros >= 5) return 30_000;
+  return 0;
+}
+
 export function podeTentar(t: Tentativas, agora: number): boolean {
-  return t.erros < LIMITE_ERROS || agora - t.ultimoErro >= ESPERA_MS;
+  return agora - t.ultimoErro >= esperaMs(t.erros);
 }

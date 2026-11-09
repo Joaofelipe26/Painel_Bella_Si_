@@ -1,4 +1,11 @@
-import { boolean, date, integer, pgTable, serial, smallint, text, timestamp, unique } from 'drizzle-orm/pg-core';
+import { bigint, boolean, date, integer, pgTable, serial, smallint, text, timestamp, unique } from 'drizzle-orm/pg-core';
+
+/** Erros de PIN seguidos. Uma linha só (id = 1): o app tem um PIN só. */
+export const tentativasPin = pgTable('tentativas_pin', {
+  id: smallint('id').primaryKey().default(1),
+  erros: integer('erros').notNull().default(0),
+  ultimoErro: bigint('ultimo_erro', { mode: 'number' }).notNull().default(0),
+});
 import type { Leva, Opcao, Plano } from '@/dominio/tipos';
 
 export const clientes = pgTable('clientes', {

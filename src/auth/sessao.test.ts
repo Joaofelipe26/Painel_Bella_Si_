@@ -1,6 +1,6 @@
 import { SignJWT } from 'jose';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { criarToken, pinConfere, podeTentar, tokenValido } from './sessao';
+import { criarToken, esperaMs, pinConfere, pinServeParaProducao, podeTentar, tokenValido } from './sessao';
 
 beforeAll(() => {
   process.env.AUTH_SECRET = 'segredo-de-teste-com-mais-de-32-caracteres';
@@ -49,5 +49,24 @@ describe('podeTentar', () => {
   it('com 5 erros, espera 30 segundos', () => {
     expect(podeTentar({ erros: 5, ultimoErro: 1000 }, 1000 + 29_000)).toBe(false);
     expect(podeTentar({ erros: 5, ultimoErro: 1000 }, 1000 + 31_000)).toBe(true);
+  });
+});
+
+describe('esperaMs', () => {
+  it('a espera cresce com os erros', () => {
+    expect(esperaMs(4)).toBe(0);
+    expect(esperaMs(5)).toBe(30_000);
+    expect(esperaMs(10)).toBe(5 * 60_000);
+    expect(esperaMs(20)).toBe(60 * 60_000);
+    expect(esperaMs(500)).toBe(60 * 60_000);
+  });
+});
+
+describe('pinServeParaProducao', () => {
+  it('exige 6 dígitos ou mais', () => {
+    expect(pinServeParaProducao('1234')).toBe(false);
+    expect(pinServeParaProducao('12345a')).toBe(false);
+    expect(pinServeParaProducao('482913')).toBe(true);
+    expect(pinServeParaProducao('48291377')).toBe(true);
   });
 });

@@ -2,51 +2,38 @@
 
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import {
-  COOKIE_SESSAO,
-  COOKIE_TENTATIVAS,
-  criarToken,
-  pinConfere,
-  podeTentar,
-  type Tentativas,
-  VALIDADE_DIAS,
-} from '@/auth/sessao';
+import { COOKIE_SESSAO, criarToken, esperaMs, pinConfere, podeTentar, VALIDADE_DIAS } from '@/auth/sessao';
+import { getDb } from '@/db/cliente';
+import { lerTentativas, limparTentativas, registrarErro } from '@/db/consultas/tentativas';
 
 export interface EstadoEntrar {
   erro: string | null;
 }
 
-function lerTentativas(valor: string | undefined): Tentativas {
-  try {
-    const t = JSON.parse(valor ?? '');
-    if (typeof t.erros === 'number' && typeof t.ultimoErro === 'number') return t;
-  } catch {}
-  return { erros: 0, ultimoErro: 0 };
+function textoEspera(ms: number): string {
+  const minutos = Math.ceil(ms / 60_000);
+  if (ms < 60_000) return `${Math.ceil(ms / 1000)} segundos`;
+  return minutos === 1 ? '1 minuto' : `${minutos} minutos`;
 }
 
+/** O contador de erros fica no banco: apagar cookies não zera a conta. */
 export async function entrarAcao(_anterior: EstadoEntrar, formData: FormData): Promise<EstadoEntrar> {
-  const loja = await cookies();
-  const tentativas = lerTentativas(loja.get(COOKIE_TENTATIVAS)?.value);
+  const db = await getDb();
   const agora = Date.now();
+  const tentativas = await lerTentativas(db);
   if (!podeTentar(tentativas, agora)) {
-    return { erro: 'Muitas tentativas. Espere 30 segundos.' };
+    const falta = esperaMs(tentativas.erros) - (agora - tentativas.ultimoErro);
+    return { erro: `Muitas tentativas. Espere ${textoEspera(falta)}.` };
   }
 
   const pin = String(formData.get('pin') ?? '').trim();
   if (!pinConfere(pin)) {
-    const erros = tentativas.erros >= 5 ? 1 : tentativas.erros + 1;
-    loja.set(COOKIE_TENTATIVAS, JSON.stringify({ erros, ultimoErro: agora }), {
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 3600,
-      path: '/',
-    });
+    await registrarErro(db, agora);
     return { erro: 'PIN errado. Tente de novo.' };
   }
 
-  loja.delete(COOKIE_TENTATIVAS);
-  loja.set(COOKIE_SESSAO, await criarToken(), {
+  await limparTentativas(db);
+  (await cookies()).set(COOKIE_SESSAO, await criarToken(), {
     httpOnly: true,
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
