@@ -10,7 +10,10 @@ interface Props {
   children: ReactNode;
 }
 
-/** Folha que sobe de baixo. Usa <dialog> nativo: prende o foco e fecha com Esc. */
+/**
+ * Folha que sobe de baixo. Usa <dialog> nativo: prende o foco e fecha com Esc.
+ * Tocar fora não fecha: um toque sem querer não apaga o que foi digitado.
+ */
 export function Folha({ aberta, aoFechar, titulo, children }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
   const idTitulo = useId();
@@ -28,9 +31,6 @@ export function Folha({ aberta, aoFechar, titulo, children }: Props) {
       className={estilos.folha}
       aria-labelledby={idTitulo}
       onClose={aoFechar}
-      onClick={(e) => {
-        if (e.target === e.currentTarget) aoFechar();
-      }}
     >
       <div className={estilos.conteudo}>
         <div className={estilos.topo}>

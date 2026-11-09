@@ -6,6 +6,8 @@ import {
   hojeSP,
   minutosAteCorte,
   segundaDaSemana,
+  semanaPadrao,
+  dataValida,
   somarDias,
 } from './datas';
 
@@ -76,5 +78,30 @@ describe('minutosAteCorte', () => {
   });
   it('devolve null depois do corte', () => {
     expect(minutosAteCorte('2026-11-11', new Date('2026-11-11T12:10:00Z'))).toBeNull();
+  });
+});
+
+describe('semanaPadrao', () => {
+  it('de segunda a sexta, abre a semana atual', () => {
+    expect(semanaPadrao('2026-11-11')).toBe('2026-11-09');
+    expect(semanaPadrao('2026-11-13')).toBe('2026-11-09');
+  });
+  it('no sábado e no domingo, abre a próxima semana (a Simone planeja no domingo)', () => {
+    expect(semanaPadrao('2026-11-14')).toBe('2026-11-16');
+    expect(semanaPadrao('2026-11-15')).toBe('2026-11-16');
+  });
+});
+
+describe('dataValida', () => {
+  it('aceita uma data real', () => {
+    expect(dataValida('2026-11-11')).toBe(true);
+    expect(dataValida('2028-02-29')).toBe(true);
+  });
+  it('recusa data impossível ou texto qualquer', () => {
+    expect(dataValida('2026-13-45')).toBe(false);
+    expect(dataValida('2026-02-30')).toBe(false);
+    expect(dataValida('abc')).toBe(false);
+    expect(dataValida(undefined)).toBe(false);
+    expect(dataValida(['2026-11-11'])).toBe(false);
   });
 });

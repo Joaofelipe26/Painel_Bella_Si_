@@ -3,7 +3,7 @@ import { getDb } from '@/db/cliente';
 import { cardapioDaSemana } from '@/db/consultas/cardapio';
 import { listarClientes } from '@/db/consultas/clientes';
 import { pedidosDoPeriodo } from '@/db/consultas/pedidos';
-import { diasUteis, hojeSP, segundaDaSemana } from '@/dominio/datas';
+import { dataValida, diasUteis, hojeSP, segundaDaSemana, semanaPadrao } from '@/dominio/datas';
 import { GradeSemana } from './GradeSemana';
 
 export const metadata: Metadata = { title: 'Pedidos · Bella Si' };
@@ -11,9 +11,7 @@ export const metadata: Metadata = { title: 'Pedidos · Bella Si' };
 export default async function PaginaPedidos({ searchParams }: PageProps<'/pedidos'>) {
   const { semana } = await searchParams;
   const segunda =
-    typeof semana === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(semana)
-      ? segundaDaSemana(semana)
-      : segundaDaSemana(hojeSP(new Date()));
+    dataValida(semana) ? segundaDaSemana(semana) : semanaPadrao(hojeSP(new Date()));
   const dias = diasUteis(segunda);
   const db = await getDb();
   const [clientes, pedidos, cardapio] = await Promise.all([

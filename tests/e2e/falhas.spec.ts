@@ -40,4 +40,25 @@ test.describe('falhas de rede e de sessão', () => {
     await expect(page.getByRole('dialog').getByText('Sem conexão. Tente de novo.')).toBeVisible();
     await expect(page.getByText(/Application error/)).toHaveCount(0);
   });
+
+  test('tocar fora da folha não fecha e não perde o que foi digitado', async ({ page }) => {
+    await entrarComSucesso(page);
+    await page.goto('/cadastros');
+    await page.getByRole('button', { name: '+ Novo cliente' }).click();
+    const folha = page.getByRole('dialog');
+    await folha.getByLabel('Nome').fill('Digitado');
+    await page.mouse.click(10, 10); // área escura atrás da folha
+    await expect(folha).toBeVisible();
+    await expect(folha.getByLabel('Nome')).toHaveValue('Digitado');
+    await folha.getByRole('button', { name: 'Fechar' }).click();
+    await expect(folha).toBeHidden();
+  });
+
+  test('data inválida no endereço abre a semana padrão, sem erro', async ({ page }) => {
+    await entrarComSucesso(page);
+    const r = await page.goto('/pedidos?semana=2026-13-45');
+    expect(r?.status()).toBe(200);
+    await expect(page.getByRole('heading', { name: /^Pedidos ·/ })).toBeVisible();
+  });
 });
+

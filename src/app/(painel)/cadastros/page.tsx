@@ -4,7 +4,7 @@ import { sairAcao } from '@/app/entrar/acoes';
 import { getDb } from '@/db/cliente';
 import { cardapioDaSemana } from '@/db/consultas/cardapio';
 import { listarClientes } from '@/db/consultas/clientes';
-import { hojeSP, segundaDaSemana } from '@/dominio/datas';
+import { dataValida, hojeSP, segundaDaSemana, semanaPadrao } from '@/dominio/datas';
 import { Cabecalho } from '@/ui/Cabecalho';
 import estilos from './cadastros.module.css';
 import { FormCardapio } from './FormCardapio';
@@ -13,14 +13,14 @@ import { ListaClientes } from './ListaClientes';
 export const metadata: Metadata = { title: 'Cadastros · Bella Si' };
 
 function semanaValida(v: unknown, padrao: string): string {
-  return typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? segundaDaSemana(v) : padrao;
+  return dataValida(v) ? segundaDaSemana(v) : padrao;
 }
 
 export default async function PaginaCadastros({ searchParams }: PageProps<'/cadastros'>) {
   const params = await searchParams;
   const aba = params.aba === 'cardapio' ? 'cardapio' : 'clientes';
   const db = await getDb();
-  const segunda = semanaValida(params.semana, segundaDaSemana(hojeSP(new Date())));
+  const segunda = semanaValida(params.semana, semanaPadrao(hojeSP(new Date())));
 
   return (
     <>

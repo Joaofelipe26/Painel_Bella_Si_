@@ -59,6 +59,18 @@ export function diasUteis(segunda: string): string[] {
   return [0, 1, 2, 3, 4].map((n) => somarDias(segunda, n));
 }
 
+/** Texto no formato AAAA-MM-DD que é uma data real (2026-02-30 não é). */
+export function dataValida(v: unknown): v is string {
+  if (typeof v !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(v)) return false;
+  const d = new Date(`${v}T12:00:00Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 10) === v;
+}
+
+/** Semana que a tela abre: a atual em dia útil; a próxima no sábado e no domingo. */
+export function semanaPadrao(hoje: string): string {
+  return ehDiaUtil(hoje) ? segundaDaSemana(hoje) : segundaDaSemana(somarDias(hoje, 2));
+}
+
 export function ehDiaUtil(data: string): boolean {
   const dia = diaDaSemana(data);
   return dia >= 1 && dia <= 5;

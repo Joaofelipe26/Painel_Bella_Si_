@@ -17,7 +17,7 @@ function normalizar(t: string): string {
 export function ListaClientes({ clientes }: { clientes: Cliente[] }) {
   const [busca, setBusca] = useState('');
   const [editando, setEditando] = useState<Cliente | 'novo' | null>(null);
-  const [mensagem, setMensagem] = useState<string | null>(null);
+  const [mensagem, setMensagem] = useState<{ tipo: 'ok' | 'erro'; texto: string } | null>(null);
 
   const filtro = normalizar(busca.trim());
   const ativos = clientes.filter((c) => c.ativo && normalizar(c.nome).includes(filtro));
@@ -41,7 +41,7 @@ export function ListaClientes({ clientes }: { clientes: Cliente[] }) {
         </Botao>
       </div>
 
-      {mensagem && <Aviso tipo="ok">{mensagem}</Aviso>}
+      {mensagem && <Aviso tipo={mensagem.tipo}>{mensagem.texto}</Aviso>}
 
       {ativos.length === 0 ? (
         <p className={estilos.vazio}>{busca ? 'Nenhum cliente com esse nome.' : 'Nenhum cliente cadastrado ainda.'}</p>
@@ -84,9 +84,9 @@ export function ListaClientes({ clientes }: { clientes: Cliente[] }) {
           <FormCliente
             key={editando === 'novo' ? 'novo' : editando.id}
             cliente={editando === 'novo' ? null : editando}
-            aoSalvar={(texto) => {
+            aoSalvar={(m) => {
               setEditando(null);
-              setMensagem(texto);
+              setMensagem(m);
             }}
           />
         )}
@@ -95,7 +95,15 @@ export function ListaClientes({ clientes }: { clientes: Cliente[] }) {
   );
 }
 
-function BotaoAtivo({ id, ativo, aoTerminar }: { id: number; ativo: boolean; aoTerminar: (t: string) => void }) {
+function BotaoAtivo({
+  id,
+  ativo,
+  aoTerminar,
+}: {
+  id: number;
+  ativo: boolean;
+  aoTerminar: (m: { tipo: 'ok' | 'erro'; texto: string }) => void;
+}) {
   const [pendente, iniciar] = useTransition();
   return (
     <Botao
@@ -105,7 +113,11 @@ function BotaoAtivo({ id, ativo, aoTerminar }: { id: number; ativo: boolean; aoT
         if (ativo && !window.confirm('Desativar este cliente? Ele some da grade, e os pedidos dele a partir de amanhã são apagados.')) return;
         iniciar(async () => {
           const r = await chamarAcao(() => definirAtivoAcao(id, !ativo));
-          aoTerminar(r.ok ? (ativo ? 'Cliente desativado.' : 'Cliente reativado.') : r.erro);
+          aoTerminar(
+            r.ok
+              ? { tipo: 'ok', texto: ativo ? 'Cliente desativado.' : 'Cliente reativado.' }
+              : { tipo: 'erro', texto: r.erro },
+          );
         });
       }}
     >
@@ -114,14 +126,20 @@ function BotaoAtivo({ id, ativo, aoTerminar }: { id: number; ativo: boolean; aoT
   );
 }
 
-function FormCliente({ cliente, aoSalvar }: { cliente: Cliente | null; aoSalvar: (texto: string) => void }) {
+function FormCliente({
+  cliente,
+  aoSalvar,
+}: {
+  cliente: Cliente | null;
+  aoSalvar: (m: { tipo: 'ok' | 'erro'; texto: string }) => void;
+}) {
   const [estado, acao, pendente] = useActionState<RespostaAcao | null, FormData>(
     (anterior, dados) => chamarAcao(() => salvarClienteAcao(anterior, dados)),
     null,
   );
 
   useEffect(() => {
-    if (estado?.ok) aoSalvar(cliente ? 'Cliente salvo.' : 'Cliente cadastrado.');
+    if (estado?.ok) aoSalvar({ tipo: 'ok', texto: cliente ? 'Cliente salvo.' : 'Cliente cadastrado.' });
   }, [estado, cliente, aoSalvar]);
 
   return (
