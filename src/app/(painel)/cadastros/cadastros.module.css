@@ -1,0 +1,234 @@
+.abas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--espaco-2);
+  margin-top: var(--espaco-2);
+}
+
+.aba {
+  min-height: 52px;
+  border-radius: var(--raio-m);
+  border: 2px solid var(--cor-branco);
+  color: var(--cor-branco);
+  font-size: var(--texto-18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.abaAtiva {
+  background: var(--cor-branco);
+  color: var(--cor-verde);
+  font-weight: var(--peso-forte);
+}
+
+.conteudo {
+  padding: var(--espaco-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-4);
+}
+
+.barra {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+.campoBusca,
+.grupo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-1);
+}
+
+.rotulo {
+  font-size: var(--texto-16);
+  font-weight: var(--peso-medio);
+  color: var(--cor-texto-suave);
+}
+
+.campo {
+  min-height: 52px;
+  width: 100%;
+  border-radius: var(--raio-m);
+  border: 2px solid var(--cor-borda);
+  background: var(--cor-branco);
+  padding: 0 var(--espaco-3);
+  font-size: var(--texto-18);
+}
+
+.campo:focus-visible {
+  border-color: var(--cor-verde);
+}
+
+.vazio {
+  text-align: center;
+  color: var(--cor-texto-suave);
+  padding: var(--espaco-5) 0;
+}
+
+.lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-2);
+}
+
+.itemCliente {
+  width: 100%;
+  min-height: 64px;
+  border: none;
+  border-radius: var(--raio-g);
+  background: var(--cor-branco);
+  padding: var(--espaco-3) var(--espaco-4);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  text-align: left;
+  cursor: pointer;
+}
+
+@media (hover: hover) {
+  .itemCliente:hover {
+    background: var(--cor-verde-fundo);
+  }
+}
+
+.nome {
+  font-size: var(--texto-18);
+  font-weight: var(--peso-forte);
+}
+
+.detalhe {
+  font-size: var(--texto-16);
+  color: var(--cor-texto-suave);
+}
+
+.inativos summary {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  font-weight: var(--peso-medio);
+  color: var(--cor-texto-suave);
+  cursor: pointer;
+}
+
+.itemInativo {
+  background: var(--cor-branco);
+  border-radius: var(--raio-g);
+  padding: var(--espaco-3) var(--espaco-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+.duasColunas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--espaco-3);
+}
+
+.checagem {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-3);
+  background: var(--cor-laranja-claro);
+  color: var(--cor-aviso-texto);
+  border-radius: var(--raio-m);
+  padding: var(--espaco-3) var(--espaco-4);
+  font-size: var(--texto-16);
+  cursor: pointer;
+}
+
+.checagem input {
+  width: 28px;
+  height: 28px;
+  flex-shrink: 0;
+  accent-color: var(--cor-laranja-texto);
+}
+
+.seletorSemana {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espaco-3);
+}
+
+.seta {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--raio-total);
+  background: var(--cor-branco);
+  color: var(--cor-verde);
+  font-size: var(--texto-32);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+}
+
+.semanaTexto {
+  font-size: var(--texto-20);
+  font-weight: var(--peso-forte);
+}
+
+.dia {
+  border: none;
+  background: var(--cor-branco);
+  border-radius: var(--raio-g);
+  padding: var(--espaco-4);
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--espaco-3);
+}
+
+.diaTitulo {
+  font-size: var(--texto-20);
+  font-weight: var(--peso-forte);
+  color: var(--cor-verde);
+  padding: 0;
+}
+
+.basicos {
+  background: var(--cor-verde-fundo);
+  color: var(--cor-verde-escuro);
+  border-radius: var(--raio-g);
+  padding: var(--espaco-4);
+}
+
+.basicos ul {
+  margin: var(--espaco-2) 0 0;
+  padding-left: var(--espaco-5);
+  font-size: var(--texto-16);
+}
+
+.sair {
+  margin-top: var(--espaco-4);
+  display: flex;
+  justify-content: center;
+}
+
+.botaoSair {
+  min-height: 48px;
+  padding: 0 var(--espaco-4);
+  border: none;
+  background: transparent;
+  color: var(--cor-texto-suave);
+  font-size: var(--texto-16);
+  text-decoration: underline;
+  cursor: pointer;
+}
